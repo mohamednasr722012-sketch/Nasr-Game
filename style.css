@@ -1,1 +1,831 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+
+:root {
+  --bg: #070914;
+  --panel: rgba(17, 22, 44, .92);
+  --panel2: #10162c;
+  --line: rgba(151, 155, 255, .22);
+  --text: #f5f6ff;
+  --muted: #9da7c8;
+  --blue: #6478ff;
+  --purple: #b05cff;
+  --gold: #ffcf70;
+  --green: #5af0ba;
+  --red: #ff638c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 22px 14px 35px;
+  overflow-x: hidden;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 50% -15%, #393c80 0%, transparent 48%),
+    radial-gradient(ellipse at 100% 80%, #411a64 0%, transparent 35%),
+    var(--bg);
+  font-family: 'Cairo', Tahoma, Arial, sans-serif;
+  animation: backgroundPulse 9s ease-in-out infinite alternate;
+}
+
+/* أضواء الخلفية المتحركة */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: .22;
+  pointer-events: none;
+}
+
+body::before {
+  top: 8%;
+  right: -170px;
+  background: #6964ff;
+  animation: floatRight 12s ease-in-out infinite alternate;
+}
+
+body::after {
+  bottom: -140px;
+  left: -160px;
+  background: #c24cff;
+  animation: floatLeft 15s ease-in-out infinite alternate;
+}
+
+.app {
+  position: relative;
+  width: min(100%, 680px);
+  margin: 0 auto;
+}
+
+/* رأس اللعبة */
+.hero {
+  padding: 10px 0 27px;
+  text-align: center;
+  animation: heroEnter .8s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 13px;
+  border: 1px solid #b1a2ff65;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #383c82, #171a37);
+  box-shadow: 0 0 35px #7971ff45, inset 0 0 20px #ffffff08;
+  font-size: 37px;
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+.hero h1 {
+  margin: 0;
+  direction: ltr;
+  font-size: clamp(37px, 9vw, 57px);
+  line-height: 1.25;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-shadow: 0 0 32px #7777ff32;
+}
+
+.hero h1 span {
+  color: #c7a5ff;
+  background: linear-gradient(90deg, #8daaff, #d5a0ff, #7edbff, #8daaff);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientMove 5s linear infinite;
+}
+
+.hero > p {
+  color: var(--muted);
+  line-height: 1.9;
+}
+
+.badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  padding: 7px 13px;
+  border: 1px solid #9298ff45;
+  border-radius: 40px;
+  color: #d1d3ff;
+  background: #777dff13;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* اللوحات */
+#root {
+  animation: rootEnter .45s ease both;
+}
+
+.panel {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(19px, 5vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: 25px;
+  background: var(--panel);
+  box-shadow: 0 25px 80px #0005, inset 0 1px #ffffff0a;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  animation: panelEnter .45s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.panel::before {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, #b3a5ff, transparent);
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+  font-size: clamp(21px, 5vw, 28px);
+  font-weight: 900;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 20px;
+}
+
+.heading h2 {
+  margin: 0;
+}
+
+.heading p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.step {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border: 1px solid #969cff44;
+  border-radius: 15px;
+  color: #d0d1ff;
+  background: linear-gradient(145deg, #777dff28, #9f60ff13);
+  box-shadow: inset 0 0 18px #9999ff08;
+  font-weight: 900;
+}
+
+/* خانات اللاعبين والحقول */
+label {
+  display: block;
+  margin: 15px 0 8px;
+  color: #e4e7ff;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+input,
+textarea,
+select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 13px 14px;
+  border: 1px solid #a0aaff30;
+  border-radius: 14px;
+  outline: none;
+  color: var(--text);
+  background: #0b1124;
+  font: inherit;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #687493;
+}
+
+textarea {
+  min-height: 125px;
+  resize: vertical;
+  line-height: 1.9;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #9298ff;
+  background: #0d142b;
+  box-shadow: 0 0 0 3px #777bff20, 0 0 24px #777bff12;
+}
+
+select {
+  cursor: pointer;
+}
+
+option {
+  color: white;
+  background: #10162c;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+/* بطاقات اللاعبين - لو JavaScript استخدم هذه الكلاسات */
+.players-list {
+  display: grid;
+  gap: 11px;
+  margin: 17px 0;
+}
+
+.player-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #a0aaff20;
+  border-radius: 16px;
+  background: linear-gradient(110deg, #151d38, #101528);
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+  animation: playerEnter .35s ease both;
+}
+
+.player-card:hover {
+  transform: translateY(-2px);
+  border-color: #9c9cff70;
+  box-shadow: 0 8px 25px #0002;
+}
+
+.player-avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #a5a0ff35;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #4d4b91, #252a50);
+  font-size: 21px;
+}
+
+.player-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.player-info strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.player-info small {
+  color: var(--muted);
+}
+
+.remove-player {
+  flex-shrink: 0;
+  padding: 8px 11px;
+  border: 1px solid #ff638c35;
+  border-radius: 10px;
+  color: #ff91aa;
+  background: #ff638c10;
+  font: inherit;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+
+.remove-player:hover {
+  transform: scale(1.05);
+  background: #ff638c25;
+}
+
+/* الأزرار */
+.btn,
+button {
+  font-family: inherit;
+}
+
+.btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 48px;
+  margin-top: 12px;
+  padding: 12px 18px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s, filter .2s;
+}
+
+.btn::before {
+  position: absolute;
+  z-index: -1;
+  top: -80%;
+  left: -60%;
+  width: 35%;
+  height: 260%;
+  content: "";
+  background: #ffffff30;
+  transform: rotate(25deg);
+  transition: left .55s ease;
+}
+
+.btn:hover::before {
+  left: 140%;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.btn:active {
+  transform: scale(.97);
+}
+
+.btn:focus-visible,
+button:focus-visible {
+  outline: 2px solid #c4b5ff;
+  outline-offset: 3px;
+}
+
+.btn:disabled,
+button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(.5);
+  box-shadow: none;
+}
+
+.primary {
+  color: white;
+  background: linear-gradient(110deg, #5d72ff, #a15af3);
+  box-shadow: 0 8px 28px #7667ff35;
+}
+
+.primary:hover {
+  box-shadow: 0 12px 35px #7667ff60;
+}
+
+.secondary {
+  color: #edf0ff;
+  border-color: #aab4ff25;
+  background: #252e4d;
+}
+
+.success {
+  color: #071c18;
+  background: linear-gradient(110deg, #4ddbb0, #91f4cc);
+  box-shadow: 0 8px 25px #32d6a125;
+}
+
+.danger {
+  color: white;
+  background: linear-gradient(110deg, #f34e79, #b84df4);
+  box-shadow: 0 8px 25px #f34e7930;
+}
+
+.full {
+  width: 100%;
+}
+
+/* شاشة تمرير الهاتف */
+.pass-screen {
+  padding: 25px 15px;
+  text-align: center;
+  border: 1px solid #a5a0ff3b;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at top, #50418a55, transparent 70%),
+    #0b1024;
+  animation: cardReveal .5s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.pass-icon {
+  font-size: 56px;
+  animation: lockFloat 2.5s ease-in-out infinite;
+}
+
+.pass-screen h2 {
+  margin-top: 12px;
+}
+
+.pass-screen p {
+  color: var(--muted);
+  line-height: 1.9;
+}
+
+/* البطاقة السرية */
+.secret {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 20px 0;
+  padding: 28px 16px;
+  border: 1px solid #a79bff55;
+  border-radius: 22px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at top, #48418a55, transparent 75%),
+    #0b1024;
+  box-shadow: inset 0 0 30px #8c70ff0c, 0 12px 35px #0002;
+  animation: cardReveal .65s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.secret::before {
+  position: absolute;
+  z-index: -1;
+  top: -70%;
+  left: -60%;
+  width: 220%;
+  height: 60%;
+  content: "";
+  background: linear-gradient(transparent, #ffffff0a, transparent);
+  transform: rotate(-18deg);
+  animation: cardShine 4s ease-in-out infinite;
+}
+
+.secret .big {
+  font-size: 55px;
+}
+
+.word {
+  margin: 13px 0;
+  color: var(--gold);
+  font-size: clamp(27px, 7vw, 38px);
+  font-weight: 900;
+  text-shadow: 0 0 28px #ffcf7038;
+  animation: wordGlow 2s ease-in-out infinite alternate;
+}
+
+.normal {
+  color: var(--green);
+}
+
+.imposter {
+  color: var(--red);
+}
+
+.center {
+  text-align: center;
+}
+
+.big {
+  margin: 13px 0;
+  font-size: 49px;
+  animation: iconPop .5s cubic-bezier(.2,1.5,.4,1) both;
+}
+
+.name {
+  margin: 10px 0;
+  font-size: clamp(23px, 6vw, 32px);
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.muted,
+.hint {
+  color: var(--muted);
+}
+
+.hint {
+  margin: 15px 0 0;
+  font-size: 12px;
+  line-height: 1.9;
+  text-align: center;
+}
+
+.notice {
+  margin: 16px 0;
+  padding: 13px 15px;
+  border: 1px solid #9f9aff30;
+  border-radius: 13px;
+  color: #d7d9ff;
+  background: #7777ff0d;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+/* التصويت */
+.vote-list {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.vote-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #9faaff2b;
+  border-radius: 15px;
+  color: var(--text);
+  background: #111831;
+  text-align: right;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.vote-option:hover {
+  transform: translateX(-3px);
+  border-color: #a59bff;
+  background: #222448;
+}
+
+.vote-option.selected,
+.vote-option[aria-pressed="true"] {
+  border-color: #a996ff;
+  background: linear-gradient(110deg, #7168ff28, #b25cff19);
+  box-shadow: 0 0 22px #8b69ff18;
+}
+
+.vote-option .player-avatar {
+  width: 39px;
+  height: 39px;
+  font-size: 18px;
+}
+
+.progress-track {
+  height: 7px;
+  overflow: hidden;
+  margin: 15px 0;
+  border-radius: 99px;
+  background: #ffffff10;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #6278ff, #c16bff);
+  box-shadow: 0 0 15px #8970ff66;
+  transition: width .45s ease;
+}
+
+/* النتيجة والفائز */
+.result-card {
+  position: relative;
+  overflow: hidden;
+  padding: 28px 17px;
+  border: 1px solid #ffdc8755;
+  border-radius: 22px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at top, #85652b35, transparent 70%),
+    #111428;
+  animation: winnerEnter .8s cubic-bezier(.16,1,.3,1) both;
+}
+
+.result-card .trophy {
+  display: inline-block;
+  font-size: 68px;
+  filter: drop-shadow(0 0 18px #ffcf7070);
+  animation: trophyBounce 1.5s ease-in-out infinite;
+}
+
+.winner-name {
+  color: var(--gold);
+  font-size: clamp(27px, 7vw, 42px);
+  font-weight: 900;
+  text-shadow: 0 0 30px #ffcf7045;
+  animation: winnerGlow 1.5s ease-in-out infinite alternate;
+}
+
+.result-card.winner {
+  border-color: #5af0ba66;
+}
+
+.result-card.imposter-win {
+  border-color: #ff638c66;
+}
+
+/* لوحة النتائج */
+.scoreboard {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  border: 1px solid #a0aaff20;
+  border-radius: 14px;
+  background: #10162c;
+  animation: playerEnter .4s ease both;
+}
+
+.score-row strong {
+  overflow-wrap: anywhere;
+}
+
+.score-number {
+  color: var(--gold);
+  font-weight: 900;
+}
+
+/* الإشعارات */
+.toast {
+  position: fixed;
+  z-index: 100;
+  right: 50%;
+  bottom: 22px;
+  width: max-content;
+  max-width: calc(100% - 28px);
+  padding: 12px 18px;
+  border: 1px solid #a7a1ff55;
+  border-radius: 14px;
+  color: white;
+  background: #171b36;
+  box-shadow: 0 12px 40px #0005;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(50%, 20px);
+  transition: opacity .25s, transform .25s;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(50%, 0);
+}
+
+/* التذييل */
+footer {
+  padding: 20px 0 0;
+  color: #707b9e;
+  font-size: 12px;
+  text-align: center;
+}
+
+footer p {
+  margin: 5px 0;
+}
+
+/* الحركات */
+@keyframes backgroundPulse {
+  from { background-position: 0 0, 100% 100%; }
+  to { background-position: 15% 10%, 80% 90%; }
+}
+
+@keyframes floatRight {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-80px, 100px); }
+}
+
+@keyframes floatLeft {
+  from { transform: translate(0, 0); }
+  to { transform: translate(80px, -80px); }
+}
+
+@keyframes heroEnter {
+  from { opacity: 0; transform: translateY(-18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rootEnter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes panelEnter {
+  from { opacity: 0; transform: translateY(12px) scale(.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-6px) rotate(2deg); }
+}
+
+@keyframes gradientMove {
+  to { background-position: 250% center; }
+}
+
+@keyframes iconPop {
+  from { opacity: 0; transform: scale(.55) rotate(-10deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes lockFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: perspective(800px) rotateX(12deg) translateY(15px); }
+  to { opacity: 1; transform: perspective(800px) rotateX(0) translateY(0); }
+}
+
+@keyframes cardShine {
+  0%, 60% { top: -70%; }
+  100% { top: 150%; }
+}
+
+@keyframes wordGlow {
+  from { text-shadow: 0 0 10px #ffcf7020; }
+  to { text-shadow: 0 0 28px #ffcf7066; }
+}
+
+@keyframes winnerEnter {
+  0% { opacity: 0; transform: scale(.82) translateY(25px); }
+  70% { opacity: 1; transform: scale(1.025) translateY(-3px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+@keyframes trophyBounce {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-9px) rotate(4deg); }
+}
+
+@keyframes winnerGlow {
+  from { text-shadow: 0 0 12px #ffcf7020; }
+  to { text-shadow: 0 0 35px #ffcf7070; }
+}
+
+@keyframes playerEnter {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* دعم الشاشات الصغيرة */
+@media (max-width: 480px) {
+  body {
+    padding: 14px 10px 25px;
+  }
+
+  .hero {
+    padding-bottom: 20px;
+  }
+
+  .logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+  }
+
+  .panel {
+    border-radius: 20px;
+    padding: 19px 15px;
+  }
+
+  .row {
+    gap: 9px;
+  }
+
+  .btn {
+    padding: 11px 13px;
+  }
+
+  .player-card {
+    padding: 10px;
+  }
+}
+
+/* احترام إعداد تقليل الحركة */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
